@@ -22,7 +22,7 @@ def detect_difference_points(
     radius_min: int = 30,
     radius_max: int = 65,
     ring_width: int = 10,
-    score_threshold: float = 0.65,
+    score_threshold: float = 0.62,
     min_distance: int | None = None,
 ) -> list[tuple[int, int]]:
     """Return the center coordinates of gray circular markers in an image.
@@ -161,23 +161,50 @@ def _find_ring_candidates(
     candidates: list[tuple[float, int, int]] = []
     local_kernel_size = _odd_kernel_size(min_distance)
 
+    # Mapa de píxeles válidos de la imagen.
+    # Sirve para saber qué parte del kernel cae dentro de la imagen.
+    valid_pixels = np.ones_like(mask, dtype=np.float32)
+
     for radius in range(radius_min, radius_max + 1, 2):
         kernel = _annulus_kernel(radius, ring_width)
-        ring_area = float(kernel.sum())
-        if not area_min < ring_area < area_max:
+        full_ring_area = float(kernel.sum())
+
+        if not area_min < full_ring_area < area_max:
             continue
 
-        response = cv2.filter2D(
+        # Suma de píxeles grises que coinciden con el anillo.
+        gray_ring_sum = cv2.filter2D(
             mask,
-            ddepth=-1,
-            kernel=kernel / ring_area,
+            ddepth=cv2.CV_32F,
+            kernel=kernel,
             borderType=cv2.BORDER_CONSTANT,
         )
+
+        # Área visible del anillo en cada posición.
+        # En el centro de la imagen será full_ring_area.
+        # Cerca de bordes será menor porque parte del círculo queda fuera.
+        visible_ring_area = cv2.filter2D(
+            valid_pixels,
+            ddepth=cv2.CV_32F,
+            kernel=kernel,
+            borderType=cv2.BORDER_CONSTANT,
+        )
+
+        # Evita divisiones absurdas si apenas se ve el anillo.
+        min_visible_area = full_ring_area * 0.30
+
+        response = np.zeros_like(gray_ring_sum, dtype=np.float32)
+        valid = visible_ring_area >= min_visible_area
+
+        response[valid] = gray_ring_sum[valid] / visible_ring_area[valid]
+
         local_max = cv2.dilate(
             response,
             np.ones((local_kernel_size, local_kernel_size), dtype=np.uint8),
         )
+
         ys, xs = np.where((response == local_max) & (response >= score_threshold))
+
         candidates.extend(
             (float(response[y, x]), int(x), int(y)) for x, y in zip(xs, ys)
         )
