@@ -1,0 +1,32 @@
+[build-system]
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "differences-detector"
+version = "0.1.0"
+description = "Detect gray circle difference markers in puzzle images."
+authors = ["Dani Gracia"]
+readme = "README.md"
+license = "MIT"
+packages = [{ include = "differences_detector", from = "src" }]
+keywords = ["differences", "detector", "image-processing", "opencv", "puzzle"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering :: Image Processing",
+]
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+numpy = ">=1.24"
+opencv-python = ">=4.8"
+
+[tool.poetry.scripts]
+detect-differences = "differences_detector.cli:main"

@@ -1,0 +1,2 @@
+[console_scripts]
+detect-differences = differences_detector.cli:main

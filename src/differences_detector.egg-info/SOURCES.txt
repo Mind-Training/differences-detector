@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+src/differences_detector/__init__.py
+src/differences_detector/cli.py
+src/differences_detector/detector.py
+src/differences_detector.egg-info/PKG-INFO
+src/differences_detector.egg-info/SOURCES.txt
+src/differences_detector.egg-info/dependency_links.txt
+src/differences_detector.egg-info/entry_points.txt
+src/differences_detector.egg-info/requires.txt
+src/differences_detector.egg-info/top_level.txt
