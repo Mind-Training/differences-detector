@@ -20,18 +20,19 @@ def main() -> None:
         help="Optional output image path with detected points drawn in red.",
     )
 
-    parser.add_argument("--gray-min", type=int, default=120)
-    parser.add_argument("--gray-max", type=int, default=215)
+    parser.add_argument("--gray-min", type=int, default=85)
+    parser.add_argument("--gray-max", type=int, default=170)
 
     # Important:
     # These default to None so detector.py can use its adaptive scaling.
-    parser.add_argument("--area-min", type=int, default=None)
-    parser.add_argument("--area-max", type=int, default=None)
-    parser.add_argument("--radius-min", type=int, default=None)
-    parser.add_argument("--radius-max", type=int, default=None)
+    parser.add_argument("--area-min", type=int, default=25)
+    parser.add_argument("--area-max", type=int, default=5000)
+    parser.add_argument("--radius-min", type=int, default=10)
+    parser.add_argument("--radius-max", type=int, default=35)
     parser.add_argument("--ring-width", type=int, default=None)
-    parser.add_argument("--score-threshold", type=float, default=0.20)
-    parser.add_argument("--min-distance", type=int, default=None)
+    parser.add_argument("--score-threshold", type=float, default=0.0)
+    parser.add_argument("--min-distance", type=int, default=24)
+    parser.add_argument("--expected-count", type=int, default=8)
 
     args = parser.parse_args()
 
@@ -46,6 +47,7 @@ def main() -> None:
         ring_width=args.ring_width,
         score_threshold=args.score_threshold,
         min_distance=args.min_distance,
+        expected_count=args.expected_count,
     )
 
     print(points)
