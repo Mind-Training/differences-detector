@@ -11,21 +11,28 @@ def main() -> None:
     parser = argparse.ArgumentParser(
         description="Detect gray circular difference markers in an image."
     )
+
     parser.add_argument("image", help="Input image path.")
+
     parser.add_argument(
         "-o",
         "--output",
         help="Optional output image path with detected points drawn in red.",
     )
+
     parser.add_argument("--gray-min", type=int, default=120)
     parser.add_argument("--gray-max", type=int, default=215)
-    parser.add_argument("--area-min", type=int, default=500)
-    parser.add_argument("--area-max", type=int, default=50000)
-    parser.add_argument("--radius-min", type=int, default=30)
-    parser.add_argument("--radius-max", type=int, default=65)
-    parser.add_argument("--ring-width", type=int, default=10)
-    parser.add_argument("--score-threshold", type=float, default=0.65)
-    parser.add_argument("--min-distance", type=int)
+
+    # Important:
+    # These default to None so detector.py can use its adaptive scaling.
+    parser.add_argument("--area-min", type=int, default=None)
+    parser.add_argument("--area-max", type=int, default=None)
+    parser.add_argument("--radius-min", type=int, default=None)
+    parser.add_argument("--radius-max", type=int, default=None)
+    parser.add_argument("--ring-width", type=int, default=None)
+    parser.add_argument("--score-threshold", type=float, default=0.20)
+    parser.add_argument("--min-distance", type=int, default=None)
+
     args = parser.parse_args()
 
     points = detect_difference_points(
@@ -42,6 +49,7 @@ def main() -> None:
     )
 
     print(points)
+    print(f"Detected {len(points)} differences.")
 
     if args.output:
         draw_detected_points(args.image, points, args.output)
