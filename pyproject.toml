@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "differences-detector"
-version = "0.1.3"
+version = "0.1.4"
 description = "Detect gray circle difference markers in puzzle images."
 authors = ["Dani Gracia"]
 readme = "README.md"
@@ -26,7 +26,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = ">=3.10"
 numpy = ">=1.24"
-opencv-python = ">=4.8"
+opencv-python-headless = ">=4.8"
 
 [tool.poetry.scripts]
 detect-differences = "differences_detector.cli:main"
